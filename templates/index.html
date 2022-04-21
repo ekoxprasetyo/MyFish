@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Aplikasi Deteksi Jenis dan Kesegaran Ikan</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="../static/index.js"></script>
+<script>
+var loadgambar = function(event) {
+	var image = document.getElementById('imagebox');
+	var lokasi = document.getElementById('hasil').value;
+	//image.src = URL.createObjectURL(lokasi);
+	
+	alert(document.getElementById('hasil').value);
+};
+
+function addImage() {
+	var url = document.getElementById('hasil').value;
+	var asli = document.getElementById('asli').value;
+	var image = new Image();
+	image.src = asli;
+	document.getElementById('ImageContainer').appendChild(image);
+	alert(url+"==="+asli);
+};
+</script>
+
+</head>
+<body>
+
+<div class="container">
+  <h1 class="jumbotron bg-primary">Aplikasi Deteksi Jenis dan Kesegaran Ikan</h1>
+  <br><br>
+  <form class="form-horizontal" action="/submit" method="post" enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="pwd">Upload Citra Anda :</label>
+      <div class="col-sm-10">          
+        <input type="file" class="form-control" placeholder="Hours Studied"  name="my_image" id="pwd">
+      </div>
+    </div>
+
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+    </div>
+  </form>
+
+</div>
+<div class="container">
+
+	{% if prediction is defined or bagian is defined or bagian_lain is defined %}
+		<div class="alert alert-success">
+		  <strong>Deteksi Sukses!</strong> Citra yang anda kirim sebagai berikut.
+		</div>
+	   <div class="text-left">
+		  <img src="{{img_path}}" class="rounded float-start" height="400px" width="auto">
+		</div>
+</div>
+
+
+<!--	   <div class="form-group">        
+		  <div class="col-sm-offset-2 col-sm-10">
+			<img src="{{img_path}}" height="400px" width="auto">
+		  </div>
+		</div> -->
+
+<div class="container">
+	   
+		<div class="alert alert-success">
+		  <strong>Obyek yang ditemukan:</strong>
+		</div>
+	   <div class="text-left">
+		  <img src="{{hasil_path}}" class="rounded float-start" height="400px" width="auto">
+		</div>
+
+	   
+<!--	   <div class="form-group">        
+		  <div class="col-sm-offset-2 col-sm-10">
+			  <img src="{{hasil_path}}" height="400px" width="auto">
+			  
+		  </div>
+		</div> -->
+		
+		<!-- Tampilkan ikan utuh jika ditemukan -->
+		{% if prediction is defined  %}
+			<!-- For loop logic of jinja template -->
+			<div class="alert alert-warning" >
+			  <b>Ikan utuh yang ditemukan sebagai berikut:</b>
+			</div>
+		   
+			{%for i in range(0, len)%}
+				<div class="w-25 bg-warning">Ikan utuh {{i+1}}</div>
+				<div class="text-left">        
+					<img src="{{prediction[i][0][7]}}" height="200px" width="auto">
+				</div>
+				  <div class="row">
+					<div class="col-2 col-sm-2">Jenis ikan</div>
+					<div class="col-2 col-sm-2"><strong>{{prediction[i][1]}}</strong></div>
+				  </div>
+
+
+				  <div class="row">
+					<div class="col-2 col-sm-2">Level kesegaran</div>
+					<div class="col-2 col-sm-2"><strong>{{prediction[i][0][8]}}</strong></div>
+				  </div>
+				<div class="alert alert-info" >
+				  <b>Bagian tubuh yang ditemukan:</b>
+				</div>
+				
+				{%for j in range(0, len3)%}
+					{% if bagian[j][0]== prediction[i][0][0] %}
+					<div class="text-left">        
+						<img src="{{bagian[j][6]}}" height="200px" width="auto">
+					</div>
+				  <div class="row">
+					<div class="col-2 col-sm-2">Bagian tubuh</div>
+					<div class="col-2 col-sm-2"><strong>{{bagian[j][8]}}</strong></div>\
+				  </div>
+				  <div class="row">
+					<div class="col-2 col-sm-2">Level kesegaran</div>
+					<div class="col-2 col-sm-2"><strong>{{bagian[j][7]}}</strong></div>
+				  </div>
+					{% endif   %}
+				{%endfor%}
+			<div class="alert alert-warning" >
+			  <b>Akumulasi kelas kesegaran [SS, S, TS] = <strong>{{prediction[i][2]}}</strong></b>
+			  <b><br>Terbesar = {{prediction[i][3]}}, kesimpulan = <strong>{{prediction[i][4]}}</strong></b>
+			</div>
+				
+			{%endfor%}
+		{% endif  %}
+		  
+			<div class="alert alert-info" >
+			  <b>bagian tubuh lain yang ditemukan sebagai berikut:</b>
+			</div>
+		{%for i in range(0, len2)%}
+			<div class="text-left">        
+				<img src="{{bagian_lain[i][7]}}" height="200px" width="auto">
+			</div>
+		  
+				  <div class="row">
+					<div class="col-2 col-sm-2">Nama bagian tubuh</div>
+					<div class="col-2 col-sm-2"><strong>{{bagian_lain[i][9]}}</strong></div>
+				  </div>
+				  <div class="row">
+					<div class="col-2 col-sm-2">Level kesegaran</div>
+					<div class="col-2 col-sm-2"><strong>{{bagian_lain[i][8]}}</strong></div>
+				  </div>
+			
+		{%endfor%}
+			
+		<div class="alert alert-danger">
+		  <h4>Kesimpulan : {{simpulan}}</h4>
+		</div>
+	   
+		
+		
+
+<!--
+		<h2> Your Prediction   : <i> {#prediction[0]#} </i></h2>
+		<h2> Your Prediction 2  : <i> {#prediction[0][0][7]#} </i></h2>
+	  <input type="hidden" id="hasil" value="{{hasil_path}}">
+	  <input type="hidden" id="asli" value="{{img_path}}">
+  -->
+
+	{% endif %}
+<!--
+<br><br>
+<button name="send" id = "sendbutton" onclick="addImage()">Tampilkan hasil</button>
+
+<button name="send" id = "sendbutton">Send</button>
+		<div className="pre_img">
+          <span><img id="imagebox" src=""></span>
+        </div>
+
+  <a class="btn btn-primary" href="/about" role="button">Tentang</a>
+  <br><br>
+
+-->
+
+</div>
+
+
+</body>
+</html>
