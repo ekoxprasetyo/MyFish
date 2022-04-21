@@ -1,0 +1,15 @@
+
+h5py=2.10.0=py38h5e291fa_0
+hdf5=1.10.4=h7ebc959_0
+html5lib=1.1=py_0
+imageio=2.9.0=pyhd3eb1b0_0
+jinja2=2.11.3=pyhd3eb1b0_0
+jpeg=9b=hb83a4c4_2
+numpy=1.20.1=py38h34a8a5c_0
+numpy-base=1.20.1=py38haf7ebc8_0
+opencv-contrib-python=4.5.3.56=pypi_0
+opencv-python-headless=4.5.3.56=pypi_0
+openjpeg=2.3.0=h5ec785f_1
+pandas=1.2.4=py38hd77b12b_0
+scikit-image=0.18.1=py38hf11a4ad_0
+scikit-learn=0.24.1=py38hf11a4ad_0
